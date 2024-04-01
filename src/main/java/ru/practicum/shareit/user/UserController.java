@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.user.model.User;
+import ru.practicum.shareit.user.dto.UserDto;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -22,31 +22,31 @@ public class UserController {
 
     @GetMapping("/{userId}")
     @ResponseStatus(HttpStatus.OK)
-    public User getUserById(@PathVariable("userId") Long idUser) {
+    public UserDto getUserById(@PathVariable("userId") Long idUser) {
         log.info("Вызов GET-операции \"getUserById\"");
         return userService.getUserById(idUser);
     }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<User> getAllUsers() {
+    public List<UserDto> getAllUsers() {
         log.info("Вызов GET-операции \"getAllUsers\"");
         return userService.getAllUsers();
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public User createUser(@Valid @RequestBody User user) {
+    public UserDto createUser(@Valid @RequestBody UserDto userDto) {
         log.info("Вызов POST-операции \"createUser\"");
-        return userService.createUser(user);
+        return userService.createUser(userDto);
     }
 
     @PatchMapping("/{userId}")
     @ResponseStatus(HttpStatus.OK)
-    public User updateUser(@PathVariable("userId") Long idUser,
-                           @RequestBody User user) {
+    public UserDto updateUser(@PathVariable("userId") Long idUser,
+                              @RequestBody UserDto userDto) {
         log.info("Вызов PATCH-операции \"updateUser\"");
-        return userService.updateUser(idUser, user);
+        return userService.updateUser(idUser, userDto);
     }
 
     @DeleteMapping("/{userId}")

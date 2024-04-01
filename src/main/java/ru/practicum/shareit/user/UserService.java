@@ -2,33 +2,33 @@ package ru.practicum.shareit.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.practicum.shareit.user.model.User;
+import ru.practicum.shareit.user.dto.UserDto;
 
 import java.util.List;
 
 @Service
 public class UserService {
-    private final UserRepositoryInterface userRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public UserService(UserRepositoryInterface userRepository) {
+    public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
-    public User getUserById(Long idUser) {
+    public UserDto getUserById(Long idUser) {
         return userRepository.getUserById(idUser);
     }
 
-    public List<User> getAllUsers() {
+    public List<UserDto> getAllUsers() {
         return userRepository.getAllUsers();
     }
 
-    public User createUser(User user) {
-        return userRepository.createUser(user);
+    public UserDto createUser(UserDto userDto) {
+        return userRepository.createUser(userDto);
     }
 
-    public User updateUser(Long idUser, User user) {
-        return userRepository.updateUser(idUser, user);
+    public UserDto updateUser(Long idUser, UserDto userDto) {
+        return userRepository.updateUser(idUser, userDto);
     }
 
     public void deleteUserById(Long idUser) {

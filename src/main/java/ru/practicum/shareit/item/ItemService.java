@@ -3,8 +3,7 @@ package ru.practicum.shareit.item;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.user.UserRepositoryInterface;
+import ru.practicum.shareit.user.UserRepository;
 import ru.practicum.shareit.user.exception.UserNotFoundException;
 
 import java.text.MessageFormat;
@@ -12,11 +11,11 @@ import java.util.List;
 
 @Service
 public class ItemService {
-    private final ItemRepositoryInterface itemRepository;
-    private final UserRepositoryInterface userRepository;
+    private final ItemRepository itemRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public ItemService(ItemRepositoryInterface itemRepository, UserRepositoryInterface userRepository) {
+    public ItemService(ItemRepository itemRepository, UserRepository userRepository) {
         this.itemRepository = itemRepository;
         this.userRepository = userRepository;
     }
@@ -34,14 +33,14 @@ public class ItemService {
         return itemRepository.searchThingByText(text);
     }
 
-    public ItemDto createItem(Item item, Long idOwner) {
+    public ItemDto createItem(ItemDto itemDto, Long idOwner) {
         verifyExistenceOfUser(idOwner);
-        return itemRepository.createItem(item, idOwner);
+        return itemRepository.createItem(itemDto, idOwner);
     }
 
-    public ItemDto updateItem(Item item, Long idItem, Long idOwner) {
+    public ItemDto updateItem(ItemDto updateItemDto, Long idItem, Long idOwner) {
         verifyExistenceOfUser(idOwner);
-        return itemRepository.updateItem(item, idItem, idOwner);
+        return itemRepository.updateItem(updateItemDto, idItem, idOwner);
     }
 
     private void verifyExistenceOfUser(Long idUser) {

@@ -5,9 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.model.Item;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -15,14 +15,6 @@ import java.util.List;
 @RequestMapping("/items")
 public class ItemController {
     private final ItemService itemService;
-
-    /*
-     * В общем, я вообще не понимаю, как правильно использовать эти Dto классы.
-     * Я прочитал, что они используются для передачи данных между слоями приложения, но что это значит?
-     * Означает это, то, что к примеру в методе update мне нужно принимать на вход ItemDto и смотреть параметры,
-     * которые там есть и заменять их у нужного объекта?
-     * Или Dto классы используются для возврата пользователю определённой информации?
-     */
 
     @Autowired
     public ItemController(ItemService itemService) {
@@ -43,30 +35,35 @@ public class ItemController {
         return itemService.getAllItemsUserById(idUser);
     }
 
+    /*
+     * Может есть аннотация или типо того стандартного ответа в таких случаях?
+     * Что-то не смог толком инфы по этому поводу найти
+     */
     @GetMapping("/search")
     @ResponseStatus(HttpStatus.OK)
     public List<ItemDto> searchThingByText(@RequestParam("text") String text) {
         log.info("Вызов GET-операции \"searchThingByText\"");
-        return itemService.searchThingByText(text);
+        if (text.isBlank()) {
+            return new ArrayList<>();
+        } else {
+            return itemService.searchThingByText(text);
+        }
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ItemDto createItem(@Valid @RequestBody Item item,
+    public ItemDto createItem(@Valid @RequestBody ItemDto itemDto,
                               @RequestHeader("X-Sharer-User-Id") Long idOwner) {
         log.info("Вызов POST-операции \"createItem\"");
-        return itemService.createItem(item, idOwner);
+        return itemService.createItem(itemDto, idOwner);
     }
 
-    /*
-     * Может тут лучше из тела запроса создавать ItemDto, а не Item?
-     */
     @PatchMapping("/{itemId}")
     @ResponseStatus(HttpStatus.OK)
-    public ItemDto updateItem(@RequestBody Item item,
+    public ItemDto updateItem(@RequestBody ItemDto itemDto,
                               @PathVariable("itemId") Long idItem,
                               @RequestHeader("X-Sharer-User-Id") Long idOwner) {
         log.info("Вызов PATCH-операции \"updateItem\"");
-        return itemService.updateItem(item, idItem, idOwner);
+        return itemService.updateItem(itemDto, idItem, idOwner);
     }
 }
