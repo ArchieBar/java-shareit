@@ -3,6 +3,7 @@ package ru.practicum.shareit.user;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.user.dto.UserDto;
 
@@ -11,6 +12,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
+@Validated
 @RequestMapping(path = "/users")
 public class UserController {
     private final UserService userService;
@@ -35,6 +37,7 @@ public class UserController {
     }
 
     @PostMapping
+    @Validated(UserDto.onCreate.class)
     @ResponseStatus(HttpStatus.CREATED)
     public UserDto createUser(@Valid @RequestBody UserDto userDto) {
         log.info("Вызов POST-операции \"createUser\"");
@@ -42,9 +45,10 @@ public class UserController {
     }
 
     @PatchMapping("/{userId}")
+    @Validated(UserDto.onUpdate.class)
     @ResponseStatus(HttpStatus.OK)
     public UserDto updateUser(@PathVariable("userId") Long idUser,
-                              @RequestBody UserDto userDto) {
+                              @Valid @RequestBody UserDto userDto) {
         log.info("Вызов PATCH-операции \"updateUser\"");
         return userService.updateUser(idUser, userDto);
     }

@@ -22,16 +22,6 @@ public class ItemMapper {
                 .collect(Collectors.toList());
     }
 
-    /*
-     * Ха, а как правильно из Dto класса сделать обычную сущность?
-     * Передавать нужные параметры отдельно? Как у меня сделано в этом классе?
-     *
-     * Допустим так, а как корректно сделать из List<Dto> -> List<Object>?
-     * Когда у тебя совпадают поля это легко, можно сделать стримами, а когда нет?
-     * Как в этом случае?
-     *
-     * Пока не понимаю :(
-     */
     public static Item toItem(ItemDto itemDto, Long idOwner) {
         return new Item(
                 itemDto.getId(),

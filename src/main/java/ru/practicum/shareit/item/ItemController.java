@@ -35,10 +35,6 @@ public class ItemController {
         return itemService.getAllItemsUserById(idUser);
     }
 
-    /*
-     * Может есть аннотация или типо того стандартного ответа в таких случаях?
-     * Что-то не смог толком инфы по этому поводу найти
-     */
     @GetMapping("/search")
     @ResponseStatus(HttpStatus.OK)
     public List<ItemDto> searchThingByText(@RequestParam("text") String text) {

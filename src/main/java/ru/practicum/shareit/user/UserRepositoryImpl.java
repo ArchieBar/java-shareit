@@ -6,7 +6,6 @@ import ru.practicum.shareit.user.exception.UserDuplicateException;
 import ru.practicum.shareit.user.exception.UserNotFoundException;
 import ru.practicum.shareit.user.model.User;
 
-import javax.validation.constraints.Email;
 import java.text.MessageFormat;
 import java.util.*;
 
@@ -47,7 +46,7 @@ public class UserRepositoryImpl implements UserRepository {
             throw new UserDuplicateException(
                     MessageFormat.format("Пользователь с id: {0} создан ранее.", userDto.getId()));
         }
-        checkUserEmail(userDto.getEmail());
+        checkDuplicateUserEmail(userDto.getEmail());
         userDto.setId(generateId());
         emailUsers.add(userDto.getEmail());
         users.put(userDto.getId(), UserMapper.toUser(userDto));
@@ -62,7 +61,7 @@ public class UserRepositoryImpl implements UserRepository {
         }
         User user = users.get(idUser);
         if (updateUserDto.getEmail() != null && !user.getEmail().equalsIgnoreCase(updateUserDto.getEmail())) {
-            checkUserEmail(updateUserDto.getEmail());
+            checkDuplicateUserEmail(updateUserDto.getEmail());
             emailUsers.remove(user.getEmail());
             user.setEmail(updateUserDto.getEmail());
             emailUsers.add(user.getEmail());
@@ -88,11 +87,7 @@ public class UserRepositoryImpl implements UserRepository {
         return id++;
     }
 
-    /*
-     * Не уверен, что это лучшее решение.
-     * Но как по другому проверить валидность почты при обновлении я не нашел :(
-     */
-    private void checkUserEmail(@Email String email) {
+    private void checkDuplicateUserEmail(String email) {
         if (emailUsers.contains(email)) {
             throw new UserDuplicateException(
                     MessageFormat.format("Пользователь с email: {0} создан ранее.", email));

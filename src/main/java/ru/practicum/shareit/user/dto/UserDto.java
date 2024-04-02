@@ -15,10 +15,19 @@ public class UserDto {
 
     private Long id;
 
-    @NotBlank(message = "Имя пользователя не может быть пустым.")
+    @NotBlank(groups = UserDto.onCreate.class, message = "Имя пользователя не может быть пустым.")
     private String name;
 
-    @Email(message = "Email пользователя должен быть формата: email@email.email.")
-    @NotNull(message = "Email пользователя не может быть пустым.")
+    @Email(groups = {UserDto.onCreate.class, UserDto.onUpdate.class},
+            message = "Email пользователя должен быть формата: email@email.email.")
+    @NotNull(groups = UserDto.onCreate.class, message = "Email пользователя не может быть пустым.")
     private String email;
+
+    /*
+     * Думаю, это лучше вынести в отдельный интерфейс, но где его лучше разместить?
+     * В папке src?
+     */
+    public interface onCreate {}
+
+    public interface onUpdate {}
 }
