@@ -37,7 +37,7 @@ public class UserController {
     }
 
     @PostMapping
-    @Validated(UserDto.onCreate.class)
+    @Validated(UserDto.OnCreate.class)
     @ResponseStatus(HttpStatus.CREATED)
     public UserDto createUser(@Valid @RequestBody UserDto userDto) {
         log.info("Вызов POST-операции \"createUser\"");
@@ -45,7 +45,7 @@ public class UserController {
     }
 
     @PatchMapping("/{userId}")
-    @Validated(UserDto.onUpdate.class)
+    @Validated(UserDto.OnUpdate.class)
     @ResponseStatus(HttpStatus.OK)
     public UserDto updateUser(@PathVariable("userId") Long idUser,
                               @Valid @RequestBody UserDto userDto) {
