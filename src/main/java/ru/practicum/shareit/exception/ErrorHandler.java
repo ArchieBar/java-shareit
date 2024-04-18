@@ -39,6 +39,9 @@ public class ErrorHandler {
         return new ErrorResponse("Отказ в доступе к объекту", exception.getMessage());
     }
 
+    //TODO
+    // Изменить обработку ошибок по примеру из этой статьи:
+    // https://struchkov.dev/blog/ru/spring-boot-validation/#%D0%B3%D1%80%D1%83%D0%BF%D0%BF%D1%8B-%D0%B2%D0%B0%D0%BB%D0%B8%D0%B4%D0%B0%D1%86%D0%B8%D0%B9
     @ExceptionHandler({ValidationException.class, MethodArgumentNotValidException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse objectValidationException(Exception exception) {
