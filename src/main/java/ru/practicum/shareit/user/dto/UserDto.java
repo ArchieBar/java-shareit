@@ -1,6 +1,5 @@
 package ru.practicum.shareit.user.dto;
 
-import com.sun.xml.bind.v2.TODO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
