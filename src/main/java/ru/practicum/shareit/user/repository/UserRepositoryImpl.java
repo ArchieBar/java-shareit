@@ -1,10 +1,11 @@
-package ru.practicum.shareit.user;
+package ru.practicum.shareit.user.repository;
 
 import org.springframework.stereotype.Repository;
-import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.exception.UserDuplicateException;
 import ru.practicum.shareit.user.exception.UserNotFoundException;
 import ru.practicum.shareit.user.model.User;
+import ru.practicum.shareit.user.model.UserMapper;
+import ru.practicum.shareit.user.model.dto.UserDto;
 
 import java.text.MessageFormat;
 import java.util.*;
@@ -12,11 +13,6 @@ import java.util.*;
 @Repository
 public class UserRepositoryImpl implements UserRepository {
     private final Map<Long, User> users = new HashMap<>();
-    /*
-     * Ещё есть идея сделать мапу <email, user>, т.к. может потребоваться поиск по почте.
-     * Но мне кажется, что делать хранилище с двумя мапами с разными ключами - плохая идея.
-     * Так что оставлю пока HashSet.
-     */
     private final Set<String> emailUsers = new HashSet<>();
     private Long id = 1L;
 

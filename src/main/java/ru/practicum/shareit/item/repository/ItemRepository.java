@@ -1,9 +1,13 @@
-package ru.practicum.shareit.item;
+package ru.practicum.shareit.item.repository;
 
-import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.model.dto.ItemDto;
+import ru.practicum.shareit.user.model.User;
 
 import java.util.List;
 
+/*
+ * Оставил на всякий случай.
+ */
 public interface ItemRepository {
     ItemDto getItemById(Long idItem);
 
@@ -11,7 +15,7 @@ public interface ItemRepository {
 
     List<ItemDto> searchThingByText(String text);
 
-    ItemDto createItem(ItemDto itemDto, Long idOwner);
+    ItemDto createItem(ItemDto itemDto, User owner);
 
     ItemDto updateItem(ItemDto itemDto, Long idItem, Long idOwner);
 }
