@@ -3,7 +3,7 @@ package ru.practicum.shareit.booking.model.state;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
-import ru.practicum.shareit.booking.model.state.exception.IllegalArgumentStateException;
+import ru.practicum.shareit.booking.model.state.exception.InvalidArgumentStateException;
 
 @Component
 public class StringToStateConverter implements Converter<String, State> {
@@ -12,7 +12,7 @@ public class StringToStateConverter implements Converter<String, State> {
         try {
             return State.valueOf(source.toUpperCase());
         } catch (MethodArgumentTypeMismatchException | IllegalArgumentException e) {
-            throw new IllegalArgumentStateException(source);
+            throw new InvalidArgumentStateException(source);
         }
     }
 }
