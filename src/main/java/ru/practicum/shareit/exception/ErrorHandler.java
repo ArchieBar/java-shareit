@@ -54,7 +54,7 @@ public class ErrorHandler {
      */
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse IllegalArgumentsStateException(InvalidArgumentStateException e) {
+    public ErrorResponse illegalArgumentsStateException(InvalidArgumentStateException e) {
         return new ErrorResponse(e.getMessage(), e.getMessage());
     }
 
