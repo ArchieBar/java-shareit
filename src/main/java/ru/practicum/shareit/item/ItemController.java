@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.item.model.dto.ItemDto;
+import ru.practicum.shareit.item.model.dto.ItemWithBooking;
 import ru.practicum.shareit.item.service.ItemService;
 
 import javax.validation.Valid;
@@ -22,16 +23,17 @@ public class ItemController {
 
     @GetMapping("/{itemId}")
     @ResponseStatus(HttpStatus.OK)
-    public ItemDto getItemById(@PathVariable("itemId") Long idItem) {
+    public ItemWithBooking getItemById(@RequestHeader("X-Sharer-User-Id") Long userId,
+                                       @PathVariable("itemId") Long idItem) {
         log.info("Вызов GET-операции \"getItemById\"");
-        return itemService.getItemById(idItem);
+        return itemService.getItemById(idItem, userId);
     }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<ItemDto> getAllItemsUserById(@RequestHeader("X-Sharer-User-Id") Long idUser) {
+    public List<ItemWithBooking> getAllItemsUserById(@RequestHeader("X-Sharer-User-Id") Long userId) {
         log.info("Вызов GET-операции \"getAllItemUserById\"");
-        return itemService.getAllItemsUserById(idUser);
+        return itemService.getAllItemsUserById(userId);
     }
 
     @GetMapping("/search")

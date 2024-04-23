@@ -34,7 +34,7 @@ public class Item {
     private Boolean available;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private User owner;
 
     public Item(String name, String description, Boolean available, User owner) {

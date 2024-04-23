@@ -3,6 +3,7 @@ package ru.practicum.shareit.item.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.item.model.dto.ItemDto;
+import ru.practicum.shareit.item.model.dto.ItemWithBooking;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.exception.UserNotFoundException;
 import ru.practicum.shareit.user.model.UserMapper;
@@ -22,13 +23,14 @@ public class ItemServiceImpl implements ItemService {
         this.userRepository = userRepository;
     }
 
-    public ItemDto getItemById(Long idItem) {
-        return itemRepository.getItemById(idItem);
+    public ItemWithBooking getItemById(Long idItem, Long userId) {
+        return null;
     }
 
-    public List<ItemDto> getAllItemsUserById(Long idUser) {
+    public List<ItemWithBooking> getAllItemsUserById(Long idUser) {
         verifyExistenceOfUser(idUser);
-        return itemRepository.getAllItemsUserById(idUser);
+        itemRepository.getAllItemsUserById(idUser);
+        return null;
     }
 
     public List<ItemDto> searchThingByText(String text) {
