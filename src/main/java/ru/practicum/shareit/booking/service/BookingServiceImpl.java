@@ -8,7 +8,7 @@ import ru.practicum.shareit.booking.model.BookingMapper;
 import ru.practicum.shareit.booking.model.dto.BookingDto;
 import ru.practicum.shareit.booking.model.dto.BookingResponseDto;
 import ru.practicum.shareit.booking.model.state.State;
-import ru.practicum.shareit.booking.model.state.exception.IllegalArgumentsStateException;
+import ru.practicum.shareit.booking.model.state.exception.IllegalArgumentStateException;
 import ru.practicum.shareit.booking.model.status.Status;
 import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.item.exception.ItemNotFoundException;
@@ -39,7 +39,7 @@ public class BookingServiceImpl implements BookingService {
         try {
             enumState = State.valueOf(state);
         } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentsStateException(state);
+            throw new IllegalArgumentStateException(state);
         }
         switch (enumState) {
             case ALL:
@@ -73,7 +73,7 @@ public class BookingServiceImpl implements BookingService {
         try {
             enumState = State.valueOf(state);
         } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentsStateException(state);
+            throw new IllegalArgumentStateException(state);
         }
         switch (enumState) {
             case ALL:
