@@ -12,7 +12,7 @@ import ru.practicum.shareit.booking.model.state.exception.InvalidArgumentStateEx
 import ru.practicum.shareit.booking.model.status.Status;
 import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.item.exception.ItemNotFoundException;
-import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.item.model.item.Item;
 import ru.practicum.shareit.item.repository.ItemRepositoryJpa;
 import ru.practicum.shareit.user.exception.UserNotFoundException;
 import ru.practicum.shareit.user.model.User;
@@ -20,7 +20,9 @@ import ru.practicum.shareit.user.repository.UserRepositoryJpa;
 
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class BookingServiceImpl implements BookingService {
@@ -46,10 +48,12 @@ public class BookingServiceImpl implements BookingService {
                 return BookingMapper.toBookingResponseDtoList(bookingRepository.findAllBookingByBookerId(ownerId));
             case CURRENT:
                 return BookingMapper.toBookingResponseDtoList(
-                        bookingRepository.findAllCurrentBooking(ownerId, LocalDateTime.now()));
+                                bookingRepository.findAllCurrentBooking(ownerId, LocalDateTime.now())).stream()
+                        .sorted(Comparator.comparing(BookingResponseDto::getStatus).reversed())
+                        .collect(Collectors.toList());
             case PAST:
                 return BookingMapper.toBookingResponseDtoList(
-                        bookingRepository.findAllBookingByBookerIdAndEndTimeBefore(ownerId, LocalDateTime.now()));
+                        bookingRepository.findAllBookingByBookerIdAndEndTimeBeforeAndStatus(ownerId, LocalDateTime.now(), Status.APPROVED));
             case FUTURE:
                 return BookingMapper.toBookingResponseDtoList(
                         bookingRepository.findAllBookingByBookerIdAndStartTimeAfter(ownerId, LocalDateTime.now()));
@@ -81,10 +85,12 @@ public class BookingServiceImpl implements BookingService {
                         bookingRepository.findAllBookingByItemOwnerId(ownerId));
             case CURRENT:
                 return BookingMapper.toBookingResponseDtoList(
-                        bookingRepository.findAllCurrentBookingByItemOwnerId(ownerId, LocalDateTime.now()));
+                                bookingRepository.findAllCurrentBookingByItemOwnerId(ownerId, LocalDateTime.now())).stream()
+                        .sorted(Comparator.comparing(BookingResponseDto::getStatus).reversed())
+                        .collect(Collectors.toList());
             case PAST:
                 return BookingMapper.toBookingResponseDtoList(
-                        bookingRepository.findAllBookingByItemOwnerIdAndEndTimeBefore(ownerId, LocalDateTime.now()));
+                        bookingRepository.findAllBookingByItemOwnerIdAndEndTimeBeforeAndStatus(ownerId, LocalDateTime.now(), Status.APPROVED));
             case FUTURE:
                 return BookingMapper.toBookingResponseDtoList(
                         bookingRepository.findAllBookingByItemOwnerIdAndStartTimeAfter(ownerId, LocalDateTime.now()));

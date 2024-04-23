@@ -2,7 +2,7 @@ package ru.practicum.shareit.booking.model;
 
 import ru.practicum.shareit.booking.model.dto.BookingDto;
 import ru.practicum.shareit.booking.model.dto.BookingResponseDto;
-import ru.practicum.shareit.item.model.ItemMapper;
+import ru.practicum.shareit.item.model.item.ItemMapper;
 import ru.practicum.shareit.user.model.UserMapper;
 
 import java.util.Comparator;

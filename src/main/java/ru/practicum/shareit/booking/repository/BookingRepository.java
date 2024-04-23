@@ -23,13 +23,15 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     List<Booking> findAllBookingByItemOwnerIdAndStartTimeAfter(Long userId, LocalDateTime time);
 
-    List<Booking> findAllBookingByBookerIdAndEndTimeBefore(Long userId, LocalDateTime time);
+    List<Booking> findAllBookingByBookerIdAndEndTimeBeforeAndStatus(Long userId, LocalDateTime time, Status status);
 
-    List<Booking> findAllBookingByItemOwnerIdAndEndTimeBefore(Long userId, LocalDateTime time);
+    List<Booking> findAllBookingByItemOwnerIdAndEndTimeBeforeAndStatus(Long userId, LocalDateTime time, Status status);
 
-    Page<Booking> findFirstBookingByItemIdAndStartTimeBefore(Long itemId, LocalDateTime time, Pageable pageable);
+    Page<Booking> findFirstBookingByItemIdAndStartTimeBeforeAndStatus(Long itemId, LocalDateTime time, Pageable pageable, Status status);
 
-    Page<Booking> findFirstBookingByItemIdAndStartTimeAfter(Long itemId, LocalDateTime time, Pageable pageable);
+    Page<Booking> findFirstBookingByItemIdAndStartTimeAfterAndStatus(Long itemId, LocalDateTime time, Pageable pageable, Status status);
+
+    List<Booking> findAllBookingByItemIdAndBookerIdAndEndTimeBefore(Long itemId, Long bookerId, LocalDateTime time);
 
     @Query("SELECT b FROM Booking b " +
             "WHERE b.booker.id = :userId " +

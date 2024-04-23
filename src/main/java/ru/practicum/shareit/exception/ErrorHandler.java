@@ -72,7 +72,8 @@ public class ErrorHandler {
             ValidationException.class,
             MethodArgumentNotValidException.class,
             BookingStartTimeException.class,
-            DoubleApprovedException.class})
+            DoubleApprovedException.class,
+            BookingNotFoundThisTimeException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse objectValidationException(Exception exception) {
         log.info("Ошибка валидации: {}", exception.getMessage());

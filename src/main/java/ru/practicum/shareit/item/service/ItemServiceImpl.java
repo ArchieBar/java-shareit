@@ -2,8 +2,10 @@ package ru.practicum.shareit.item.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.practicum.shareit.item.model.dto.ItemDto;
-import ru.practicum.shareit.item.model.dto.ItemWithBooking;
+import ru.practicum.shareit.item.model.comment.Comment;
+import ru.practicum.shareit.item.model.comment.CommentDto;
+import ru.practicum.shareit.item.model.item.dto.ItemDto;
+import ru.practicum.shareit.item.model.item.dto.ItemWithBooking;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.exception.UserNotFoundException;
 import ru.practicum.shareit.user.model.UserMapper;
@@ -24,6 +26,11 @@ public class ItemServiceImpl implements ItemService {
     }
 
     public ItemWithBooking getItemById(Long idItem, Long userId) {
+        return null;
+    }
+
+    @Override
+    public Comment createComment(CommentDto commentDto, Long itemId, Long userId) {
         return null;
     }
 

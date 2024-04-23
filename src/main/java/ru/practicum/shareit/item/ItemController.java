@@ -5,8 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.item.model.dto.ItemDto;
-import ru.practicum.shareit.item.model.dto.ItemWithBooking;
+import ru.practicum.shareit.item.model.comment.Comment;
+import ru.practicum.shareit.item.model.comment.CommentDto;
+import ru.practicum.shareit.item.model.item.dto.ItemDto;
+import ru.practicum.shareit.item.model.item.dto.ItemWithBooking;
 import ru.practicum.shareit.item.service.ItemService;
 
 import javax.validation.Valid;
@@ -53,6 +55,14 @@ public class ItemController {
                               @RequestHeader("X-Sharer-User-Id") Long idOwner) {
         log.info("Вызов POST-операции \"createItem\"");
         return itemService.createItem(itemDto, idOwner);
+    }
+
+    @PostMapping("/{itemId}/comment")
+    @ResponseStatus(HttpStatus.OK)
+    public Comment createComment(@RequestBody @Valid CommentDto commentDto,
+                                 @PathVariable("itemId") Long itemId,
+                                 @RequestHeader("X-Sharer-User-Id") Long userId) {
+        return itemService.createComment(commentDto, itemId, userId);
     }
 
     @PatchMapping("/{itemId}")

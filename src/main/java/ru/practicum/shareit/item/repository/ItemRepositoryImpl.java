@@ -4,12 +4,13 @@ import org.springframework.stereotype.Repository;
 import ru.practicum.shareit.item.exception.ItemDuplicateException;
 import ru.practicum.shareit.item.exception.ItemNotFoundException;
 import ru.practicum.shareit.item.exception.ItemOwnershipException;
-import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.item.model.ItemMapper;
-import ru.practicum.shareit.item.model.dto.ItemDto;
+import ru.practicum.shareit.item.model.item.Item;
+import ru.practicum.shareit.item.model.item.ItemMapper;
+import ru.practicum.shareit.item.model.item.dto.ItemDto;
 import ru.practicum.shareit.user.model.User;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,7 +60,8 @@ public class ItemRepositoryImpl implements ItemRepository {
                 itemDto.getName(),
                 itemDto.getDescription(),
                 itemDto.getAvailable(),
-                owner
+                owner,
+                new ArrayList<>()
         );
         items.put(item.getId(), item);
         return ItemMapper.toItemDto(item);
