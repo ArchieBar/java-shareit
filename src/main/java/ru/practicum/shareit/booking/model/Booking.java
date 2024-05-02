@@ -30,6 +30,7 @@ public class Booking {
     private Item item;
 
     @NotNull
+    @Enumerated
     private Status status;
 
     @NotNull

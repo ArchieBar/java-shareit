@@ -7,10 +7,14 @@ import java.util.List;
 
 public interface BookingService {
     List<BookingResponseDto> getAllBooking(Long ownerId,
-                                           String state);
+                                           String state,
+                                           Integer from,
+                                           Integer size);
 
     List<BookingResponseDto> getAllBookingFromItemOwner(Long ownerId,
-                                                        String state);
+                                                        String state,
+                                                        Integer from,
+                                                        Integer size);
 
     BookingResponseDto getBookingById(Long userId,
                                       Long bookingId);

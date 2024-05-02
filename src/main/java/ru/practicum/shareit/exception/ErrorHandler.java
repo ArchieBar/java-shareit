@@ -12,6 +12,8 @@ import ru.practicum.shareit.exception.model.ErrorResponse;
 import ru.practicum.shareit.item.exception.ItemDuplicateException;
 import ru.practicum.shareit.item.exception.ItemNotFoundException;
 import ru.practicum.shareit.item.exception.ItemOwnershipException;
+import ru.practicum.shareit.request.exception.RequestNotFoundException;
+import ru.practicum.shareit.request.exception.RequestOwnershipException;
 import ru.practicum.shareit.user.exception.UserDuplicateException;
 import ru.practicum.shareit.user.exception.UserNotFoundException;
 
@@ -25,7 +27,8 @@ public class ErrorHandler {
             UserNotFoundException.class,
             BookingNotFoundException.class,
             BookingOwnershipException.class,
-            BookingYourOwnException.class})
+            BookingYourOwnException.class,
+            RequestNotFoundException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
     private ErrorResponse notFoundObjectHandler(RuntimeException exception) {
         log.info("Объект не найден: {}", exception.getMessage());
@@ -41,8 +44,7 @@ public class ErrorHandler {
 
     @ExceptionHandler({
             ItemDuplicateException.class,
-            UserDuplicateException.class,
-            IllegalArgumentException.class})
+            UserDuplicateException.class})
     @ResponseStatus(HttpStatus.CONFLICT)
     private ErrorResponse illegalArgumentHandler(RuntimeException exception) {
         log.info("Недопустимый аргумент объекта: {}", exception.getMessage());
@@ -55,10 +57,13 @@ public class ErrorHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse illegalArgumentsStateException(InvalidArgumentStateException e) {
+        log.info(e.getMessage());
         return new ErrorResponse(e.getMessage(), e.getMessage());
     }
 
-    @ExceptionHandler({ItemOwnershipException.class})
+    @ExceptionHandler({
+            ItemOwnershipException.class,
+            RequestOwnershipException.class})
     @ResponseStatus(HttpStatus.FORBIDDEN)
     private ErrorResponse objectAccessDeniedHandler(RuntimeException exception) {
         log.info("Отказ в доступе к объекту: {}", exception.getMessage());
@@ -73,7 +78,8 @@ public class ErrorHandler {
             MethodArgumentNotValidException.class,
             BookingStartTimeException.class,
             DoubleApprovedException.class,
-            BookingNotFoundThisTimeException.class})
+            BookingNotFoundThisTimeException.class,
+            IllegalArgumentException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse objectValidationException(Exception exception) {
         log.info("Ошибка валидации: {}", exception.getMessage());

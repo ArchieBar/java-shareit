@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.practicum.shareit.item.model.comment.Comment;
 import ru.practicum.shareit.item.model.comment.CommentDto;
 import ru.practicum.shareit.item.model.item.dto.ItemDto;
-import ru.practicum.shareit.item.model.item.dto.ItemWithBooking;
+import ru.practicum.shareit.item.model.item.dto.ItemWithBookingDto;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.exception.UserNotFoundException;
 import ru.practicum.shareit.user.model.UserMapper;
@@ -25,7 +25,17 @@ public class ItemServiceImpl implements ItemService {
         this.userRepository = userRepository;
     }
 
-    public ItemWithBooking getItemById(Long idItem, Long userId) {
+    public ItemWithBookingDto getItemById(Long idItem, Long userId) {
+        return null;
+    }
+
+    @Override
+    public List<ItemWithBookingDto> getAllItemsUserById(Long userId, Integer from, Integer size) {
+        return null;
+    }
+
+    @Override
+    public List<ItemDto> searchThingByText(String text, Integer from, Integer size) {
         return null;
     }
 
@@ -34,7 +44,7 @@ public class ItemServiceImpl implements ItemService {
         return null;
     }
 
-    public List<ItemWithBooking> getAllItemsUserById(Long idUser) {
+    public List<ItemWithBookingDto> getAllItemsUserById(Long idUser) {
         verifyExistenceOfUser(idUser);
         itemRepository.getAllItemsUserById(idUser);
         return null;
