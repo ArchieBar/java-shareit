@@ -1,13 +1,16 @@
-package ru.practicum.shareit.item;
+package ru.practicum.shareit.item.repository;
 
 import org.springframework.stereotype.Repository;
-import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.exception.ItemDuplicateException;
 import ru.practicum.shareit.item.exception.ItemNotFoundException;
 import ru.practicum.shareit.item.exception.ItemOwnershipException;
-import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.item.model.item.Item;
+import ru.practicum.shareit.item.model.item.ItemMapper;
+import ru.practicum.shareit.item.model.item.dto.ItemDto;
+import ru.practicum.shareit.user.model.User;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +34,7 @@ public class ItemRepositoryImpl implements ItemRepository {
     @Override
     public List<ItemDto> getAllItemsUserById(Long idUser) {
         return items.values().stream()
-                .filter(item -> item.getOwner().equals(idUser))
+                .filter(item -> item.getOwner().getId().equals(idUser))
                 .map(ItemMapper::toItemDto)
                 .collect(Collectors.toList());
     }
@@ -47,7 +50,7 @@ public class ItemRepositoryImpl implements ItemRepository {
     }
 
     @Override
-    public ItemDto createItem(ItemDto itemDto, Long idOwner) {
+    public ItemDto createItem(ItemDto itemDto, User owner) {
         if (items.containsKey(itemDto.getId())) {
             throw new ItemDuplicateException(
                     MessageFormat.format("Вещь с id: {0} создана ранее.", itemDto.getId()));
@@ -57,7 +60,8 @@ public class ItemRepositoryImpl implements ItemRepository {
                 itemDto.getName(),
                 itemDto.getDescription(),
                 itemDto.getAvailable(),
-                idOwner
+                owner,
+                new ArrayList<>()
         );
         items.put(item.getId(), item);
         return ItemMapper.toItemDto(item);
@@ -70,7 +74,7 @@ public class ItemRepositoryImpl implements ItemRepository {
             throw new ItemNotFoundException(
                     MessageFormat.format("Вещь для обновления с id: {0} не найдена.", idItem));
         }
-        if (!item.getOwner().equals(idOwner)) {
+        if (!item.getOwner().getId().equals(idOwner)) {
             throw new ItemOwnershipException(
                     MessageFormat.format("Вещь с id: {0} имеет id владельца отличного от id: {1}.", idItem, idOwner));
         }

@@ -1,9 +1,12 @@
-package ru.practicum.shareit.user;
+package ru.practicum.shareit.user.repository;
 
-import ru.practicum.shareit.user.dto.UserDto;
+import ru.practicum.shareit.user.model.dto.UserDto;
 
 import java.util.List;
 
+/*
+ * Оставил на всякий случай.
+ */
 public interface UserRepository {
     Boolean findUserById(Long idUser);
 

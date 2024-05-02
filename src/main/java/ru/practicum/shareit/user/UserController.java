@@ -2,10 +2,12 @@ package ru.practicum.shareit.user;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.user.dto.UserDto;
+import ru.practicum.shareit.user.model.dto.UserDto;
+import ru.practicum.shareit.user.service.UserService;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -15,12 +17,13 @@ import java.util.List;
 @Validated
 @RequestMapping(path = "/users")
 public class UserController {
-    private final UserService userService;
-
+    /*
+     * Думаю, что лучше перенести всю валидацию в сервис.
+     * Пока нет времени на это, может займусь позже
+     */
     @Autowired
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
+    @Qualifier("UserServiceJpa")
+    private UserService userService;
 
     @GetMapping("/{userId}")
     @ResponseStatus(HttpStatus.OK)

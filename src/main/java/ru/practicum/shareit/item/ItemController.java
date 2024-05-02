@@ -2,9 +2,14 @@ package ru.practicum.shareit.item;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.model.comment.Comment;
+import ru.practicum.shareit.item.model.comment.CommentDto;
+import ru.practicum.shareit.item.model.item.dto.ItemDto;
+import ru.practicum.shareit.item.model.item.dto.ItemWithBooking;
+import ru.practicum.shareit.item.service.ItemService;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
@@ -14,25 +19,23 @@ import java.util.List;
 @RestController
 @RequestMapping("/items")
 public class ItemController {
-    private final ItemService itemService;
-
     @Autowired
-    public ItemController(ItemService itemService) {
-        this.itemService = itemService;
-    }
+    @Qualifier("ItemServiceJpa")
+    private ItemService itemService;
 
     @GetMapping("/{itemId}")
     @ResponseStatus(HttpStatus.OK)
-    public ItemDto getItemById(@PathVariable("itemId") Long idItem) {
+    public ItemWithBooking getItemById(@RequestHeader("X-Sharer-User-Id") Long userId,
+                                       @PathVariable("itemId") Long idItem) {
         log.info("Вызов GET-операции \"getItemById\"");
-        return itemService.getItemById(idItem);
+        return itemService.getItemById(idItem, userId);
     }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<ItemDto> getAllItemsUserById(@RequestHeader("X-Sharer-User-Id") Long idUser) {
+    public List<ItemWithBooking> getAllItemsUserById(@RequestHeader("X-Sharer-User-Id") Long userId) {
         log.info("Вызов GET-операции \"getAllItemUserById\"");
-        return itemService.getAllItemsUserById(idUser);
+        return itemService.getAllItemsUserById(userId);
     }
 
     @GetMapping("/search")
@@ -52,6 +55,14 @@ public class ItemController {
                               @RequestHeader("X-Sharer-User-Id") Long idOwner) {
         log.info("Вызов POST-операции \"createItem\"");
         return itemService.createItem(itemDto, idOwner);
+    }
+
+    @PostMapping("/{itemId}/comment")
+    @ResponseStatus(HttpStatus.OK)
+    public Comment createComment(@RequestBody @Valid CommentDto commentDto,
+                                 @PathVariable("itemId") Long itemId,
+                                 @RequestHeader("X-Sharer-User-Id") Long userId) {
+        return itemService.createComment(commentDto, itemId, userId);
     }
 
     @PatchMapping("/{itemId}")

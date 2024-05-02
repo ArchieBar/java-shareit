@@ -1,32 +1,43 @@
-package ru.practicum.shareit.item;
+package ru.practicum.shareit.item.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.user.UserRepository;
+import ru.practicum.shareit.item.model.comment.Comment;
+import ru.practicum.shareit.item.model.comment.CommentDto;
+import ru.practicum.shareit.item.model.item.dto.ItemDto;
+import ru.practicum.shareit.item.model.item.dto.ItemWithBooking;
+import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.exception.UserNotFoundException;
+import ru.practicum.shareit.user.model.UserMapper;
+import ru.practicum.shareit.user.repository.UserRepository;
 
 import java.text.MessageFormat;
 import java.util.List;
 
 @Service
-public class ItemService {
+public class ItemServiceImpl implements ItemService {
     private final ItemRepository itemRepository;
     private final UserRepository userRepository;
 
     @Autowired
-    public ItemService(ItemRepository itemRepository, UserRepository userRepository) {
+    public ItemServiceImpl(ItemRepository itemRepository, UserRepository userRepository) {
         this.itemRepository = itemRepository;
         this.userRepository = userRepository;
     }
 
-    public ItemDto getItemById(Long idItem) {
-        return itemRepository.getItemById(idItem);
+    public ItemWithBooking getItemById(Long idItem, Long userId) {
+        return null;
     }
 
-    public List<ItemDto> getAllItemsUserById(Long idUser) {
+    @Override
+    public Comment createComment(CommentDto commentDto, Long itemId, Long userId) {
+        return null;
+    }
+
+    public List<ItemWithBooking> getAllItemsUserById(Long idUser) {
         verifyExistenceOfUser(idUser);
-        return itemRepository.getAllItemsUserById(idUser);
+        itemRepository.getAllItemsUserById(idUser);
+        return null;
     }
 
     public List<ItemDto> searchThingByText(String text) {
@@ -34,8 +45,7 @@ public class ItemService {
     }
 
     public ItemDto createItem(ItemDto itemDto, Long idOwner) {
-        verifyExistenceOfUser(idOwner);
-        return itemRepository.createItem(itemDto, idOwner);
+        return itemRepository.createItem(itemDto, UserMapper.toUser(userRepository.getUserById(idOwner)));
     }
 
     public ItemDto updateItem(ItemDto updateItemDto, Long idItem, Long idOwner) {

@@ -1,17 +1,18 @@
-package ru.practicum.shareit.item.dto;
+package ru.practicum.shareit.item.model.item.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.practicum.shareit.item.model.comment.Comment;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class ItemDto {
-
     private Long id;
 
     @NotBlank(message = "Имя вещи не может быть пустым.")
@@ -22,4 +23,6 @@ public class ItemDto {
 
     @NotNull(message = "Статус доступности не может быть пустым.")
     private Boolean available;
+
+    private List<Comment> comments;
 }
