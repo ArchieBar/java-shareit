@@ -51,8 +51,6 @@ public class UserServiceJpa implements UserService {
         return UserMapper.toUserDto(userRepository.saveAndFlush(user));
     }
 
-    //FIXME
-    // Не уверен, нужно ли проверять на существование пользователя по ID перед удалением
     @Override
     public void deleteUserById(Long userId) {
         userRepository.deleteById(userId);

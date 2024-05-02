@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import ru.practicum.shareit.item.model.comment.Comment;
 import ru.practicum.shareit.item.model.item.Item;
 import ru.practicum.shareit.item.repository.ItemRepositoryJpa;
 import ru.practicum.shareit.user.model.User;
@@ -32,12 +33,13 @@ public class ItemRepositoryQueryTest {
         user.setEmail("email@email.email");
         user = userRepository.save(user);
 
-        Item item = new Item();
-        item.setName("name");
-        item.setDescription("description");
-        item.setAvailable(true);
-        item.setOwner(user);
-        item.setComments(new ArrayList<>());
+        Item item = new Item(
+                "name",
+                "descriptipn",
+                true,
+                user
+        );
+        item.addComment(new Comment());
         item = repository.save(item);
 
         Item itemSec = new Item();

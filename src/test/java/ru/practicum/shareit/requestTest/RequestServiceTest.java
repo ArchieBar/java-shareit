@@ -1,5 +1,6 @@
 package ru.practicum.shareit.requestTest;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -10,10 +11,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import ru.practicum.shareit.item.model.item.Item;
+import ru.practicum.shareit.request.exception.RequestNotFoundException;
 import ru.practicum.shareit.request.model.ItemRequest;
 import ru.practicum.shareit.request.model.dto.ItemRequestCreatedDto;
 import ru.practicum.shareit.request.repository.ItemRequestRepository;
 import ru.practicum.shareit.request.service.ItemRequestServiceImpl;
+import ru.practicum.shareit.user.exception.UserNotFoundException;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepositoryJpa;
 
@@ -22,6 +26,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
 
@@ -84,6 +89,7 @@ public class RequestServiceTest {
         ItemRequestCreatedDto requestDto = new ItemRequestCreatedDto();
         User owner = new User();
         ItemRequest request = new ItemRequest(requestDto, owner);
+        request.addItem(new Item());
 
         when(userRepository.findById(ownerId))
                 .thenReturn(Optional.of(owner));
@@ -91,5 +97,30 @@ public class RequestServiceTest {
                 .thenReturn(request);
 
         assertEquals(request.getId(), service.createRequest(requestDto, ownerId).getId());
+    }
+
+    @Test
+    public void testCreateRequestUserNotFound() {
+        when(userRepository.findById(anyLong()))
+                .thenReturn(Optional.empty());
+
+        Assertions.assertThrows(
+                UserNotFoundException.class,
+                () -> service.createRequest(new ItemRequestCreatedDto(), 1L)
+        );
+    }
+
+    @Test
+    public void testGetRequestByIdNotFound() {
+        when(userRepository.findById(anyLong()))
+                .thenReturn(Optional.of(new User()));
+
+        when(requestRepository.findById(anyLong()))
+                .thenReturn(Optional.empty());
+
+        Assertions.assertThrows(
+                RequestNotFoundException.class,
+                () -> service.getRequestById(1L, 1L)
+        );
     }
 }

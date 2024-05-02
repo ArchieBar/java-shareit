@@ -22,16 +22,12 @@ import java.util.List;
 @Service
 public class ItemRequestServiceImpl implements ItemRequestService {
     private final ItemRequestRepository requestRepository;
-    private UserRepositoryJpa userRepository;
+    private final UserRepositoryJpa userRepository;
 
     @Autowired
     public ItemRequestServiceImpl(ItemRequestRepository requestRepository, UserRepositoryJpa userRepository) {
         this.requestRepository = requestRepository;
         this.userRepository = userRepository;
-    }
-
-    public ItemRequestServiceImpl(ItemRequestRepository requestRepository) {
-        this.requestRepository = requestRepository;
     }
 
     @Override

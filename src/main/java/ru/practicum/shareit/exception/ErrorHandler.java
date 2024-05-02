@@ -9,12 +9,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.practicum.shareit.booking.exception.*;
 import ru.practicum.shareit.booking.model.state.exception.InvalidArgumentStateException;
 import ru.practicum.shareit.exception.model.ErrorResponse;
-import ru.practicum.shareit.item.exception.ItemDuplicateException;
 import ru.practicum.shareit.item.exception.ItemNotFoundException;
 import ru.practicum.shareit.item.exception.ItemOwnershipException;
 import ru.practicum.shareit.request.exception.RequestNotFoundException;
-import ru.practicum.shareit.request.exception.RequestOwnershipException;
-import ru.practicum.shareit.user.exception.UserDuplicateException;
 import ru.practicum.shareit.user.exception.UserNotFoundException;
 
 import javax.validation.ValidationException;
@@ -42,15 +39,6 @@ public class ErrorHandler {
         return new ErrorResponse("Вещь не доступна для бронирования", e.getMessage());
     }
 
-    @ExceptionHandler({
-            ItemDuplicateException.class,
-            UserDuplicateException.class})
-    @ResponseStatus(HttpStatus.CONFLICT)
-    private ErrorResponse illegalArgumentHandler(RuntimeException exception) {
-        log.info("Недопустимый аргумент объекта: {}", exception.getMessage());
-        return new ErrorResponse("Недопустимый аргумент объекта", exception.getMessage());
-    }
-
     /*
      * Иначе тесты в постамане не проходят...
      */
@@ -62,8 +50,7 @@ public class ErrorHandler {
     }
 
     @ExceptionHandler({
-            ItemOwnershipException.class,
-            RequestOwnershipException.class})
+            ItemOwnershipException.class})
     @ResponseStatus(HttpStatus.FORBIDDEN)
     private ErrorResponse objectAccessDeniedHandler(RuntimeException exception) {
         log.info("Отказ в доступе к объекту: {}", exception.getMessage());

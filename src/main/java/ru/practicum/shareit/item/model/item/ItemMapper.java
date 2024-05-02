@@ -48,18 +48,6 @@ public class ItemMapper {
         );
     }
 
-    public static Item toNewItem(ItemDto itemDto, User owner, ItemRequest request) {
-        return new Item(
-                itemDto.getId(),
-                itemDto.getName(),
-                itemDto.getDescription(),
-                itemDto.getAvailable(),
-                owner,
-                request,
-                new ArrayList<>()
-        );
-    }
-
     public static Item toNewItem(ItemDto itemDto, User owner) {
         return new Item(
                 itemDto.getId(),

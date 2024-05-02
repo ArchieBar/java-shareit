@@ -10,6 +10,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import ru.practicum.shareit.booking.exception.*;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.dto.BookingDto;
 import ru.practicum.shareit.booking.model.dto.BookingResponseDto;
@@ -27,9 +28,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -253,6 +255,146 @@ public class BookingServiceTest {
     }
 
     @Test
+    public void testGetAllBookingFromItemOwnerCURRENT() {
+        Long ownerId = 1L;
+        String state = "CURRENT";
+        Integer from = 0;
+        Integer size = 10;
+        Pageable pageable = PageRequest.of(from, size, Sort.by("id").descending());
+
+        User user = new User();
+        user.setId(ownerId);
+
+        Item item = new Item();
+        item.setId(any(Long.class));
+
+        Booking booking = new Booking();
+        booking.setBooker(user);
+        booking.setItem(item);
+
+        when(userRepository.findById(ownerId)).thenReturn(Optional.of(user));
+
+        when(bookingRepository.findAllCurrentBookingByItemOwnerId(anyLong(), any(LocalDateTime.class), eq(pageable)))
+                .thenReturn(new PageImpl<>(List.of(booking)));
+
+        List<BookingResponseDto> result = bookingService.getAllBookingFromItemOwner(ownerId, state, from, size);
+
+        assertEquals(1, result.size());
+    }
+
+    @Test
+    public void testGetAllBookingFromItemOwnerPAST() {
+        Long ownerId = 1L;
+        String state = "PAST";
+        Integer from = 0;
+        Integer size = 10;
+        Pageable pageable = PageRequest.of(from, size, Sort.by("id").descending());
+
+        User user = new User();
+        user.setId(ownerId);
+
+        Item item = new Item();
+        item.setId(any(Long.class));
+
+        Booking booking = new Booking();
+        booking.setBooker(user);
+        booking.setItem(item);
+
+        when(userRepository.findById(ownerId)).thenReturn(Optional.of(user));
+
+        when(bookingRepository.findAllBookingByItemOwnerIdAndEndTimeBeforeAndStatus(anyLong(), any(LocalDateTime.class), any(Status.class), eq(pageable)))
+                .thenReturn(new PageImpl<>(List.of(booking)));
+
+        List<BookingResponseDto> result = bookingService.getAllBookingFromItemOwner(ownerId, state, from, size);
+
+        assertEquals(1, result.size());
+    }
+
+    @Test
+    public void testGetAllBookingFromItemOwnerFUTURE() {
+        Long ownerId = 1L;
+        String state = "FUTURE";
+        Integer from = 0;
+        Integer size = 10;
+        Pageable pageable = PageRequest.of(from, size, Sort.by("id").descending());
+
+        User user = new User();
+        user.setId(ownerId);
+
+        Item item = new Item();
+        item.setId(any(Long.class));
+
+        Booking booking = new Booking();
+        booking.setBooker(user);
+        booking.setItem(item);
+
+        when(userRepository.findById(ownerId)).thenReturn(Optional.of(user));
+
+        when(bookingRepository.findAllBookingByItemOwnerIdAndStartTimeAfter(anyLong(), any(LocalDateTime.class), eq(pageable)))
+                .thenReturn(new PageImpl<>(List.of(booking)));
+
+        List<BookingResponseDto> result = bookingService.getAllBookingFromItemOwner(ownerId, state, from, size);
+
+        assertEquals(1, result.size());
+    }
+
+    @Test
+    public void testGetAllBookingFromItemOwnerWAITING() {
+        Long ownerId = 1L;
+        String state = "WAITING";
+        Integer from = 0;
+        Integer size = 10;
+        Pageable pageable = PageRequest.of(from, size, Sort.by("id").descending());
+
+        User user = new User();
+        user.setId(ownerId);
+
+        Item item = new Item();
+        item.setId(any(Long.class));
+
+        Booking booking = new Booking();
+        booking.setBooker(user);
+        booking.setItem(item);
+
+        when(userRepository.findById(ownerId)).thenReturn(Optional.of(user));
+
+        when(bookingRepository.findAllBookingByItemOwnerIdAndStatus(anyLong(), any(Status.class), eq(pageable)))
+                .thenReturn(new PageImpl<>(List.of(booking)));
+
+        List<BookingResponseDto> result = bookingService.getAllBookingFromItemOwner(ownerId, state, from, size);
+
+        assertEquals(1, result.size());
+    }
+
+    @Test
+    public void testGetAllBookingFromItemOwnerREJECTED() {
+        Long ownerId = 1L;
+        String state = "REJECTED";
+        Integer from = 0;
+        Integer size = 10;
+        Pageable pageable = PageRequest.of(from, size, Sort.by("id").descending());
+
+        User user = new User();
+        user.setId(ownerId);
+
+        Item item = new Item();
+        item.setId(any(Long.class));
+
+        Booking booking = new Booking();
+        booking.setBooker(user);
+        booking.setItem(item);
+
+        when(userRepository.findById(ownerId)).thenReturn(Optional.of(user));
+
+        when(bookingRepository.findAllBookingByItemOwnerIdAndStatus(anyLong(), any(Status.class), eq(pageable)))
+                .thenReturn(new PageImpl<>(List.of(booking)));
+
+        List<BookingResponseDto> result = bookingService.getAllBookingFromItemOwner(ownerId, state, from, size);
+
+        assertEquals(1, result.size());
+    }
+
+    @Test
     public void testGetBookingById() {
         Long userId = 1L;
         Long bookingId = 1L;
@@ -337,6 +479,165 @@ public class BookingServiceTest {
         );
 
         Assertions.assertEquals("Пользователь с ID: 1 не найден.", exception.getMessage());
+    }
+
+    @Test
+    public void testCreateBookingThrowStartTimeException() {
+        BookingDto bookingDto = new BookingDto();
+        bookingDto.setStart(LocalDateTime.now().plusHours(1));
+        bookingDto.setEnd(LocalDateTime.now().minusHours(1));
+
+        Assertions.assertThrows(
+                BookingStartTimeException.class,
+                () -> bookingService.createBooking(1L, bookingDto)
+        );
+    }
+
+    @Test
+    public void testCreateBookingThrowYourOwnException() {
+        Long userId = 1L;
+        Long itemId = 1L;
+
+        User user = new User();
+        user.setId(userId);
+
+        Item item = new Item();
+        item.setId(itemId);
+        item.setOwner(user);
+
+        BookingDto bookingDto = new BookingDto();
+        bookingDto.setItemId(itemId);
+        bookingDto.setStart(LocalDateTime.now().plusHours(1));
+        bookingDto.setEnd(LocalDateTime.now().plusHours(2));
+
+        when(userRepository.findById(anyLong()))
+                .thenReturn(Optional.of(user));
+
+        when(itemRepository.findById(anyLong()))
+                .thenReturn(Optional.of(item));
+
+        Assertions.assertThrows(
+                BookingYourOwnException.class,
+                () -> bookingService.createBooking(userId, bookingDto)
+        );
+    }
+
+    @Test
+    public void testCreateBookingThrowItemNotAvailableException() {
+        Long userId = 1L;
+        Long itemId = 1L;
+
+        User user = new User();
+        user.setId(userId);
+
+        Item item = new Item();
+        item.setId(itemId);
+        item.setOwner(user);
+        item.setAvailable(false);
+
+        BookingDto bookingDto = new BookingDto();
+        bookingDto.setItemId(itemId);
+        bookingDto.setStart(LocalDateTime.now().plusHours(1));
+        bookingDto.setEnd(LocalDateTime.now().plusHours(2));
+
+        when(userRepository.findById(anyLong()))
+                .thenReturn(Optional.of(user));
+
+        when(itemRepository.findById(anyLong()))
+                .thenReturn(Optional.of(item));
+
+        Assertions.assertThrows(
+                ItemNotAvailableForBookingException.class,
+                () -> bookingService.createBooking(2L, bookingDto)
+        );
+    }
+
+    @Test
+    public void testUpdateApprovedBooking() {
+        User user = new User();
+        user.setId(1L);
+
+        Item item = new Item();
+        item.setOwner(user);
+
+        Booking booking = new Booking();
+        booking.setId(1L);
+        booking.setBooker(user);
+        booking.setItem(item);
+        booking.setStatus(Status.WAITING);
+        booking.setStartTime(LocalDateTime.now().minusHours(1));
+        booking.setEndTime(LocalDateTime.now().plusHours(2));
+
+        when(bookingRepository.findById(anyLong()))
+                .thenReturn(Optional.of(booking));
+
+        when(bookingRepository.save(booking))
+                .thenReturn(booking);
+
+        BookingResponseDto resultService = bookingService.updateApprovedBooking(user.getId(), booking.getId(), true);
+
+        assertThat(resultService.getId(), equalTo(booking.getId()));
+    }
+
+    @Test
+    public void testUpdateApprovedBookingNotFound() {
+        when(bookingRepository.findById(anyLong()))
+                .thenReturn(Optional.empty());
+
+        Assertions.assertThrows(
+                BookingNotFoundException.class,
+                () -> bookingService.updateApprovedBooking(1L, 1L, true)
+        );
+    }
+
+    @Test
+    public void testUpdateApprovedBookingOwnership() {
+        User user = new User();
+        user.setId(1L);
+
+        Item item = new Item();
+        item.setOwner(user);
+
+        Booking booking = new Booking();
+        booking.setId(1L);
+        booking.setBooker(user);
+        booking.setItem(item);
+        booking.setStatus(Status.WAITING);
+        booking.setStartTime(LocalDateTime.now().minusHours(1));
+        booking.setEndTime(LocalDateTime.now().plusHours(2));
+
+        when(bookingRepository.findById(anyLong()))
+                .thenReturn(Optional.of(booking));
+
+        Assertions.assertThrows(
+                BookingOwnershipException.class,
+                () -> bookingService.updateApprovedBooking(100L, 1L, true)
+        );
+    }
+
+    @Test
+    public void testUpdateApprovedBookingDoubleApproved() {
+        User user = new User();
+        user.setId(1L);
+
+        Item item = new Item();
+        item.setOwner(user);
+
+        Booking booking = new Booking();
+        booking.setId(1L);
+        booking.setBooker(user);
+        booking.setItem(item);
+        booking.setStatus(Status.APPROVED);
+        booking.setStartTime(LocalDateTime.now().minusHours(1));
+        booking.setEndTime(LocalDateTime.now().plusHours(2));
+
+        when(bookingRepository.findById(anyLong()))
+                .thenReturn(Optional.of(booking));
+
+        Assertions.assertThrows(
+                DoubleApprovedException.class,
+                () -> bookingService.updateApprovedBooking(user.getId(), booking.getId(), true)
+        );
     }
 }
 
