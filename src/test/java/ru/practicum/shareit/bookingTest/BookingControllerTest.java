@@ -9,6 +9,10 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.practicum.shareit.booking.BookingController;
+import ru.practicum.shareit.booking.exception.BookingNotFoundException;
+import ru.practicum.shareit.booking.exception.BookingOwnershipException;
+import ru.practicum.shareit.booking.exception.DoubleApprovedException;
+import ru.practicum.shareit.booking.exception.ItemNotAvailableForBookingException;
 import ru.practicum.shareit.booking.model.dto.BookingDto;
 import ru.practicum.shareit.booking.model.dto.BookingResponseDto;
 import ru.practicum.shareit.booking.model.status.Status;
@@ -153,5 +157,58 @@ public class BookingControllerTest {
                 .andExpect(jsonPath("$.booker", is(bookingResponseDto.getBooker()), UserDto.class))
                 .andExpect(jsonPath("$.item", is(bookingResponseDto.getItem()), ItemDto.class))
                 .andExpect(jsonPath("$.status", is(bookingResponseDto.getStatus().toString()), String.class));
+    }
+
+    @Test
+    public void throwBookingNotFoundExceptionUpdateApprovedBooking() throws Exception {
+        when(service.updateApprovedBooking(anyLong(), anyLong(), anyBoolean()))
+                .thenThrow(new BookingNotFoundException("Бронирование не найдено"));
+
+        mvc.perform(patch("/bookings/{bookingId}", 1)
+                        .header("X-Sharer-User-Id", 1)
+                        .param("approved", String.valueOf(true)))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.error", is("Объект не найден"), String.class))
+                .andExpect(jsonPath("$.errorMessage", is("Бронирование не найдено"), String.class));
+    }
+
+    @Test
+    public void throwBookingOwnershipExceptionUpdateApprovedBooking() throws Exception {
+        when(service.updateApprovedBooking(anyLong(), anyLong(), anyBoolean()))
+                .thenThrow(new BookingOwnershipException("ID бронирования не совпадет"));
+
+        mvc.perform(patch("/bookings/{bookingId}", 1)
+                        .header("X-Sharer-User-Id", 1)
+                        .param("approved", String.valueOf(true)))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.error", is("Объект не найден"), String.class))
+                .andExpect(jsonPath("$.errorMessage", is("ID бронирования не совпадет"), String.class));
+    }
+
+    @Test
+    public void throwDoubleApprovedExceptionUpdateApprovedBooking() throws Exception {
+        when(service.updateApprovedBooking(anyLong(), anyLong(), anyBoolean()))
+                .thenThrow(new DoubleApprovedException("Бронь уже подтверждена"));
+
+        mvc.perform(patch("/bookings/{bookingId}", 1)
+                        .header("X-Sharer-User-Id", 1)
+                        .param("approved", String.valueOf(true)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error", is("Ошибка валидации"), String.class))
+                .andExpect(jsonPath("$.errorMessage", is("Бронь уже подтверждена"), String.class));
+    }
+
+    @Test
+    public void throwItemNotAvailableForBookingExceptionUpdateApprovedBooking() throws Exception {
+        when(service.updateApprovedBooking(anyLong(), anyLong(), anyBoolean()))
+                .thenThrow(new ItemNotAvailableForBookingException("Вещь не доступна для бронирования"));
+
+        mvc.perform(patch("/bookings/{bookingId}", 1)
+                        .header("X-Sharer-User-Id", 1)
+                        .param("approved", String.valueOf(true)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error", is("Вещь не доступна для бронирования"), String.class))
+                .andExpect(jsonPath("$.errorMessage", is("Вещь не доступна для бронирования"), String.class));
+
     }
 }
