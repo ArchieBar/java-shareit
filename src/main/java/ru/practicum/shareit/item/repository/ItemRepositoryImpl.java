@@ -10,7 +10,6 @@ import ru.practicum.shareit.item.model.item.dto.ItemDto;
 import ru.practicum.shareit.user.model.User;
 
 import java.text.MessageFormat;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,14 +54,8 @@ public class ItemRepositoryImpl implements ItemRepository {
             throw new ItemDuplicateException(
                     MessageFormat.format("Вещь с id: {0} создана ранее.", itemDto.getId()));
         }
-        Item item = new Item(
-                generateId(),
-                itemDto.getName(),
-                itemDto.getDescription(),
-                itemDto.getAvailable(),
-                owner,
-                new ArrayList<>()
-        );
+        Item item = ItemMapper.toNewItem(itemDto, owner);
+
         items.put(item.getId(), item);
         return ItemMapper.toItemDto(item);
     }

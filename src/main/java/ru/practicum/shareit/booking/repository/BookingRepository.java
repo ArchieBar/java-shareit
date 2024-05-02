@@ -4,28 +4,31 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.status.Status;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Repository
 public interface BookingRepository extends JpaRepository<Booking, Long> {
-    List<Booking> findAllBookingByBookerId(Long userId);
+    Page<Booking> findAllBookingByBookerId(Long userId, Pageable pageable);
 
-    List<Booking> findAllBookingByItemOwnerId(Long ownerId);
+    Page<Booking> findAllBookingByItemOwnerId(Long ownerId, Pageable pageable);
 
-    List<Booking> findAllBookingByBookerIdAndStatus(Long userId, Status status);
+    Page<Booking> findAllBookingByBookerIdAndStatus(Long userId, Status status, Pageable pageable);
 
-    List<Booking> findAllBookingByItemOwnerIdAndStatus(Long userId, Status status);
+    Page<Booking> findAllBookingByItemOwnerIdAndStatus(Long userId, Status status, Pageable pageable);
 
-    List<Booking> findAllBookingByBookerIdAndStartTimeAfter(Long userId, LocalDateTime time);
+    Page<Booking> findAllBookingByBookerIdAndStartTimeAfter(Long userId, LocalDateTime time, Pageable pageable);
 
-    List<Booking> findAllBookingByItemOwnerIdAndStartTimeAfter(Long userId, LocalDateTime time);
+    Page<Booking> findAllBookingByItemOwnerIdAndStartTimeAfter(Long userId, LocalDateTime time, Pageable pageable);
 
-    List<Booking> findAllBookingByBookerIdAndEndTimeBeforeAndStatus(Long userId, LocalDateTime time, Status status);
+    Page<Booking> findAllBookingByBookerIdAndEndTimeBeforeAndStatus(Long userId, LocalDateTime time,
+                                                                    Status status, Pageable pageable);
 
-    List<Booking> findAllBookingByItemOwnerIdAndEndTimeBeforeAndStatus(Long userId, LocalDateTime time, Status status);
+    Page<Booking> findAllBookingByItemOwnerIdAndEndTimeBeforeAndStatus(Long userId, LocalDateTime time, Status status, Pageable pageable);
 
     Page<Booking> findFirstBookingByItemIdAndStartTimeBeforeAndStatus(Long itemId, LocalDateTime time, Pageable pageable, Status status);
 
@@ -36,10 +39,10 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     @Query("SELECT b FROM Booking b " +
             "WHERE b.booker.id = :userId " +
             "AND :now BETWEEN b.startTime AND b.endTime")
-    List<Booking> findAllCurrentBooking(Long userId, LocalDateTime now);
+    Page<Booking> findAllCurrentBooking(Long userId, LocalDateTime now, Pageable pageable);
 
     @Query("SELECT b FROM Booking b " +
             "WHERE b.item.owner.id = :userId " +
             "AND :now BETWEEN b.startTime AND b.endTime")
-    List<Booking> findAllCurrentBookingByItemOwnerId(Long userId, LocalDateTime now);
+    Page<Booking> findAllCurrentBookingByItemOwnerId(Long userId, LocalDateTime now, Pageable pageable);
 }

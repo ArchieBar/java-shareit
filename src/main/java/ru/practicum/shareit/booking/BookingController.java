@@ -13,25 +13,31 @@ import java.util.List;
 @RestController
 @RequestMapping(path = "/bookings")
 public class BookingController {
+    private final BookingService bookingService;
+
     @Autowired
-    private BookingService bookingService;
+    public BookingController(BookingService bookingService) {
+        this.bookingService = bookingService;
+    }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<BookingResponseDto> getAllBookings(@RequestHeader("X-Sharer-User-Id") Long ownerId,
-                                                   @RequestParam(value = "state",
-                                                           required = false,
-                                                           defaultValue = "ALL") String state) {
-        return bookingService.getAllBooking(ownerId, state);
+    public List<BookingResponseDto> getAllBookings(
+            @RequestHeader("X-Sharer-User-Id") Long ownerId,
+            @RequestParam(value = "state", required = false, defaultValue = "ALL") String state,
+            @RequestParam(name = "from", defaultValue = "0") Integer from,
+            @RequestParam(name = "size", defaultValue = "10") Integer size) {
+        return bookingService.getAllBooking(ownerId, state, from, size);
     }
 
     @GetMapping("/owner")
     @ResponseStatus(HttpStatus.OK)
-    public List<BookingResponseDto> getAllBookingsForOwner(@RequestHeader("X-Sharer-User-Id") Long ownerId,
-                                                           @RequestParam(value = "state",
-                                                                   required = false,
-                                                                   defaultValue = "ALL") String state) {
-        return bookingService.getAllBookingFromItemOwner(ownerId, state);
+    public List<BookingResponseDto> getAllBookingsForOwner(
+            @RequestHeader("X-Sharer-User-Id") Long ownerId,
+            @RequestParam(value = "state", required = false, defaultValue = "ALL") String state,
+            @RequestParam(name = "from", defaultValue = "0") Integer from,
+            @RequestParam(name = "size", defaultValue = "10") Integer size) {
+        return bookingService.getAllBookingFromItemOwner(ownerId, state, from, size);
     }
 
     @GetMapping("/{bookingId}")

@@ -11,10 +11,14 @@ import ru.practicum.shareit.user.repository.UserRepositoryJpa;
 import java.text.MessageFormat;
 import java.util.List;
 
-@Service("UserServiceJpa")
+@Service("userServiceJpa")
 public class UserServiceJpa implements UserService {
+    private final UserRepositoryJpa userRepository;
+
     @Autowired
-    private UserRepositoryJpa userRepository;
+    public UserServiceJpa(UserRepositoryJpa userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @Override
     public UserDto getUserById(Long userId) {
@@ -23,8 +27,6 @@ public class UserServiceJpa implements UserService {
                         MessageFormat.format("Пользователь с ID: {0} не найден.", userId))));
     }
 
-    //FIXME
-    // Тут лучше вернуть Page<UserDto>, но тесты просят список
     @Override
     public List<UserDto> getAllUsers() {
         return UserMapper.toListUserDto(userRepository.findAll());
@@ -32,8 +34,8 @@ public class UserServiceJpa implements UserService {
 
     @Override
     public UserDto createUser(UserDto userDto) {
-        return UserMapper.toUserDto(
-                userRepository.saveAndFlush(UserMapper.toUser(userDto)));
+        User user = UserMapper.toUser(userDto);
+        return UserMapper.toUserDto(userRepository.saveAndFlush(user));
     }
 
     @Override

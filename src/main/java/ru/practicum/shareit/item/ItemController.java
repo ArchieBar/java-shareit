@@ -1,14 +1,13 @@
 package ru.practicum.shareit.item;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.item.model.comment.Comment;
 import ru.practicum.shareit.item.model.comment.CommentDto;
 import ru.practicum.shareit.item.model.item.dto.ItemDto;
-import ru.practicum.shareit.item.model.item.dto.ItemWithBooking;
+import ru.practicum.shareit.item.model.item.dto.ItemWithBookingDto;
 import ru.practicum.shareit.item.service.ItemService;
 
 import javax.validation.Valid;
@@ -19,33 +18,39 @@ import java.util.List;
 @RestController
 @RequestMapping("/items")
 public class ItemController {
-    @Autowired
-    @Qualifier("ItemServiceJpa")
-    private ItemService itemService;
+    private final ItemService itemService;
+
+    public ItemController(@Qualifier("itemServiceJpa") ItemService itemService) {
+        this.itemService = itemService;
+    }
 
     @GetMapping("/{itemId}")
     @ResponseStatus(HttpStatus.OK)
-    public ItemWithBooking getItemById(@RequestHeader("X-Sharer-User-Id") Long userId,
-                                       @PathVariable("itemId") Long idItem) {
+    public ItemWithBookingDto getItemById(@RequestHeader("X-Sharer-User-Id") Long userId,
+                                          @PathVariable("itemId") Long idItem) {
         log.info("Вызов GET-операции \"getItemById\"");
         return itemService.getItemById(idItem, userId);
     }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<ItemWithBooking> getAllItemsUserById(@RequestHeader("X-Sharer-User-Id") Long userId) {
+    public List<ItemWithBookingDto> getAllItemsUserById(@RequestHeader("X-Sharer-User-Id") Long userId,
+                                                        @RequestParam(name = "from", defaultValue = "0") Integer from,
+                                                        @RequestParam(name = "size", defaultValue = "10") Integer size) {
         log.info("Вызов GET-операции \"getAllItemUserById\"");
-        return itemService.getAllItemsUserById(userId);
+        return itemService.getAllItemsUserById(userId, from, size);
     }
 
     @GetMapping("/search")
     @ResponseStatus(HttpStatus.OK)
-    public List<ItemDto> searchThingByText(@RequestParam("text") String text) {
+    public List<ItemDto> searchThingByText(@RequestParam("text") String text,
+                                           @RequestParam(name = "from", defaultValue = "0") Integer from,
+                                           @RequestParam(name = "size", defaultValue = "10") Integer size) {
         log.info("Вызов GET-операции \"searchThingByText\"");
         if (text.isBlank()) {
             return new ArrayList<>();
         } else {
-            return itemService.searchThingByText(text);
+            return itemService.searchThingByText(text, from, size);
         }
     }
 
@@ -62,6 +67,7 @@ public class ItemController {
     public Comment createComment(@RequestBody @Valid CommentDto commentDto,
                                  @PathVariable("itemId") Long itemId,
                                  @RequestHeader("X-Sharer-User-Id") Long userId) {
+        log.info("Вызов POST-операции \"createComment\"");
         return itemService.createComment(commentDto, itemId, userId);
     }
 

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.marker.Marker;
 import ru.practicum.shareit.user.model.dto.UserDto;
 import ru.practicum.shareit.user.service.UserService;
 
@@ -17,13 +18,12 @@ import java.util.List;
 @Validated
 @RequestMapping(path = "/users")
 public class UserController {
-    /*
-     * Думаю, что лучше перенести всю валидацию в сервис.
-     * Пока нет времени на это, может займусь позже
-     */
+    private final UserService userService;
+
     @Autowired
-    @Qualifier("UserServiceJpa")
-    private UserService userService;
+    public UserController(@Qualifier("userServiceJpa") UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping("/{userId}")
     @ResponseStatus(HttpStatus.OK)
@@ -40,7 +40,7 @@ public class UserController {
     }
 
     @PostMapping
-    @Validated(UserDto.OnCreate.class)
+    @Validated(Marker.OnCreate.class)
     @ResponseStatus(HttpStatus.CREATED)
     public UserDto createUser(@Valid @RequestBody UserDto userDto) {
         log.info("Вызов POST-операции \"createUser\"");
@@ -48,7 +48,7 @@ public class UserController {
     }
 
     @PatchMapping("/{userId}")
-    @Validated(UserDto.OnUpdate.class)
+    @Validated(Marker.OnUpdate.class)
     @ResponseStatus(HttpStatus.OK)
     public UserDto updateUser(@PathVariable("userId") Long idUser,
                               @Valid @RequestBody UserDto userDto) {
