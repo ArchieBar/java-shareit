@@ -211,4 +211,18 @@ public class BookingControllerTest {
                 .andExpect(jsonPath("$.errorMessage", is("Вещь не доступна для бронирования"), String.class));
 
     }
+
+    @Test
+    public void throwableServerErrorUpdateApprovedBooking() throws Exception {
+        when(service.updateApprovedBooking(anyLong(), anyLong(), anyBoolean()))
+                .thenThrow(new RuntimeException("Что-то пошло не так"));
+
+        mvc.perform(patch("/bookings/{bookingId}", 1)
+                        .header("X-Sharer-User-Id", 1)
+                        .param("approved", String.valueOf(true)))
+                .andExpect(status().isInternalServerError())
+                .andExpect(jsonPath("$.error", is("Ошибка сервера"), String.class))
+                .andExpect(jsonPath("$.errorMessage", is("Что-то пошло не так"), String.class));
+
+    }
 }
