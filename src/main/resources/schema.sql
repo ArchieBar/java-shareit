@@ -57,7 +57,7 @@ CREATE TABLE IF NOT EXISTS Bookings (
     CONSTRAINT fk_item_id FOREIGN KEY (item_id) REFERENCES Items(id)
 );
 
-CREATE TABLE IF NOT EXISTS Item_Request (
+CREATE TABLE IF NOT EXISTS REQUESTS_ITEMS (
     id_request BIGINT NOT NULL,
     id_item BIGINT  NOT NULL,
     PRIMARY KEY (id_request, id_item),
