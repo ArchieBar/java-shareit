@@ -16,11 +16,6 @@ public class UserDtoTest {
     @Autowired
     private JacksonTester<UserDto> json;
 
-    /*
-     * Не разобрался толком с этими тестами.
-     * Как сделать так, чтобы учитывалась валидация?
-     * И как учитывать группы валидаций?
-     */
     @Test
     public void userDtoCreated() throws IOException {
         UserDto user = new UserDto(
@@ -32,5 +27,7 @@ public class UserDtoTest {
         JsonContent<UserDto> result = json.write(user);
 
         assertThat(result).extractingJsonPathNumberValue("$.id").isEqualTo(1);
+        assertThat(result).extractingJsonPathStringValue("$.name").isEqualTo("name");
+        assertThat(result).extractingJsonPathStringValue("$.email").isEqualTo("email@email.email");
     }
 }

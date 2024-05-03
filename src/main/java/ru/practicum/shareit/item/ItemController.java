@@ -1,6 +1,7 @@
 package ru.practicum.shareit.item;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +21,7 @@ import java.util.List;
 public class ItemController {
     private final ItemService itemService;
 
+    @Autowired
     public ItemController(@Qualifier("itemServiceJpa") ItemService itemService) {
         this.itemService = itemService;
     }
