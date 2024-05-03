@@ -15,6 +15,7 @@ import ru.practicum.shareit.booking.exception.DoubleApprovedException;
 import ru.practicum.shareit.booking.exception.ItemNotAvailableForBookingException;
 import ru.practicum.shareit.booking.model.dto.BookingDto;
 import ru.practicum.shareit.booking.model.dto.BookingResponseDto;
+import ru.practicum.shareit.booking.model.state.exception.InvalidArgumentStateException;
 import ru.practicum.shareit.booking.model.status.Status;
 import ru.practicum.shareit.booking.service.BookingService;
 import ru.practicum.shareit.item.model.item.dto.ItemDto;
@@ -224,5 +225,17 @@ public class BookingControllerTest {
                 .andExpect(jsonPath("$.error", is("Ошибка сервера"), String.class))
                 .andExpect(jsonPath("$.errorMessage", is("Что-то пошло не так"), String.class));
 
+    }
+
+    @Test
+    public void throwInvalidArgumentStateExceptionGetAllBookings() throws Exception {
+        when(service.getAllBooking(anyLong(), anyString(), anyInt(), anyInt()))
+                .thenThrow(new InvalidArgumentStateException("state"));
+
+        mvc.perform(get("/bookings")
+                        .header("X-Sharer-User-Id", 1))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error", is("Unknown state: state"), String.class))
+                .andExpect(jsonPath("$.errorMessage", is("Unknown state: state"), String.class));
     }
 }
