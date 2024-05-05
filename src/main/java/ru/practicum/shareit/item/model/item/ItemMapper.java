@@ -2,11 +2,13 @@ package ru.practicum.shareit.item.model.item;
 
 import ru.practicum.shareit.booking.model.dto.BookingFromItemDto;
 import ru.practicum.shareit.item.model.item.dto.ItemDto;
-import ru.practicum.shareit.item.model.item.dto.ItemWithBooking;
+import ru.practicum.shareit.item.model.item.dto.ItemWithBookingDto;
+import ru.practicum.shareit.request.model.ItemRequest;
 import ru.practicum.shareit.user.model.User;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class ItemMapper {
@@ -16,6 +18,9 @@ public class ItemMapper {
                 item.getName(),
                 item.getDescription(),
                 item.getAvailable(),
+                Optional.ofNullable(item.getRequest())
+                        .map(ItemRequest::getId)
+                        .orElse(null),
                 item.getComments()
         );
     }
@@ -26,14 +31,17 @@ public class ItemMapper {
                 .collect(Collectors.toList());
     }
 
-    public static ItemWithBooking toItemWithBooking(Item item,
-                                                    BookingFromItemDto lastBooking,
-                                                    BookingFromItemDto nextBooking) {
-        return new ItemWithBooking(
+    public static ItemWithBookingDto toItemWithBooking(Item item,
+                                                       BookingFromItemDto lastBooking,
+                                                       BookingFromItemDto nextBooking) {
+        return new ItemWithBookingDto(
                 item.getId(),
                 item.getName(),
                 item.getDescription(),
                 item.getAvailable(),
+                Optional.ofNullable(item.getRequest())
+                        .map(ItemRequest::getId)
+                        .orElse(null),
                 item.getComments(),
                 lastBooking,
                 nextBooking
@@ -47,6 +55,7 @@ public class ItemMapper {
                 itemDto.getDescription(),
                 itemDto.getAvailable(),
                 owner,
+                null,
                 new ArrayList<>()
         );
     }
