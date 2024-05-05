@@ -30,7 +30,6 @@ public class ItemDtoTest {
     @Test
     public void testItemDto() throws IOException {
         LocalDateTime localDateTime = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSS");
 
         ItemDto item = new ItemDto(
                 1L,
@@ -57,13 +56,12 @@ public class ItemDtoTest {
         assertThat(result).extractingJsonPathNumberValue("$.comments[0].id").isEqualTo(1);
         assertThat(result).extractingJsonPathStringValue("$.comments[0].text").isEqualTo("text");
         assertThat(result).extractingJsonPathStringValue("$.comments[0].authorName").isEqualTo("authorName");
-        //assertThat(result).extractingJsonPathStringValue("$.comments[0].created").isEqualTo(formatter.format(localDateTime));
+        assertThat(result).hasJsonPathValue("$.comments[0].created");
     }
 
     @Test
     public void testItemWithBookingDto() throws IOException {
         LocalDateTime localDateTime = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSS");
 
         ItemWithBookingDto item = new ItemWithBookingDto(
                 1L,
@@ -103,12 +101,12 @@ public class ItemDtoTest {
         assertThat(result).extractingJsonPathNumberValue("$.comments[0].id").isEqualTo(1);
         assertThat(result).extractingJsonPathStringValue("$.comments[0].text").isEqualTo("text");
         assertThat(result).extractingJsonPathStringValue("$.comments[0].authorName").isEqualTo("authorName");
-        //assertThat(result).extractingJsonPathStringValue("$.comments[0].created").isEqualTo(formatter.format(localDateTime));
+        assertThat(result).hasJsonPathValue("$.comments[0].created");
         assertThat(result).extractingJsonPathNumberValue("$.lastBooking.id").isEqualTo(1);
         assertThat(result).extractingJsonPathNumberValue("$.lastBooking.bookerId").isEqualTo(1);
         assertThat(result).extractingJsonPathStringValue("$.lastBooking.status").isEqualTo(Status.APPROVED.name());
-        //assertThat(result).extractingJsonPathStringValue("$.lastBooking.start").isEqualTo(formatter.format(localDateTime));
-        //assertThat(result).extractingJsonPathStringValue("$.lastBooking.end").isEqualTo(formatter.format(localDateTime));
+        assertThat(result).hasJsonPathValue("$.lastBooking.start");
+        assertThat(result).hasJsonPathValue("$.lastBooking.end");
 
     }
 }
