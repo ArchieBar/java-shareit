@@ -51,13 +51,6 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public List<BookingResponseDto> getAllBooking(Long ownerId, String state, Integer from, Integer size) {
-        log.info("Вызов метода getAllBooking из BookingService" +
-                Map.of(
-               "ownerId", ownerId,
-               "state", state,
-               "from", from,
-               "size", size
-        ));
         userRepository.findById(ownerId).orElseThrow(() -> new UserNotFoundException(
                 MessageFormat.format("Пользователь с ID: {0} не найден.", ownerId)));
 
@@ -88,6 +81,15 @@ public class BookingServiceImpl implements BookingService {
         } catch (IllegalArgumentException e) {
             throw new InvalidArgumentStateException(state);
         }
+
+        log.info("Вызов метода getAllBooking из BookingService" +
+                Map.of(
+                        "ownerId", ownerId,
+                        "state", state,
+                        "from", from,
+                        "size", size,
+                        "timeNow", timeNow
+                ));
 
         switch (enumState) {
             case ALL:
