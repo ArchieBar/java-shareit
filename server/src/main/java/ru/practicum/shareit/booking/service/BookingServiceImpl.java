@@ -1,5 +1,6 @@
 package ru.practicum.shareit.booking.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -27,8 +28,10 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class BookingServiceImpl implements BookingService {
     private final BookingRepository bookingRepository;
@@ -48,6 +51,13 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public List<BookingResponseDto> getAllBooking(Long ownerId, String state, Integer from, Integer size) {
+        log.info("Вызов метода getAllBooking из BookingService" +
+                Map.of(
+               "ownerId", ownerId,
+               "state", state,
+               "from", from,
+               "size", size
+        ));
         userRepository.findById(ownerId).orElseThrow(() -> new UserNotFoundException(
                 MessageFormat.format("Пользователь с ID: {0} не найден.", ownerId)));
 
