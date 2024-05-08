@@ -65,7 +65,7 @@ public class ItemServiceJpa implements ItemService {
                 MessageFormat.format("Вещь с ID: {0} не найдена.", itemId)));
         Pageable pageableLast = PageRequest.of(0, 1, Sort.by("endTime").descending());
         Pageable pageableNext = PageRequest.of(0, 1, Sort.by("startTime").ascending());
-        LocalDateTime timeNow = ZonedDateTime.now(ZoneId.of("Europe/Moscow")).toLocalDateTime();
+        LocalDateTime timeNow = LocalDateTime.now();
         Optional<Booking> lastBookingOptional =
                 bookingRepository.findFirstBookingByItemIdAndStartTimeBeforeAndStatus(itemId, timeNow, pageableLast, Status.APPROVED)
                         .stream().findFirst();
@@ -109,7 +109,7 @@ public class ItemServiceJpa implements ItemService {
         Pageable pageableLast = PageRequest.of(0, 1, Sort.by("endTime").descending());
         Pageable pageableNext = PageRequest.of(0, 1, Sort.by("startTime").ascending());
 
-        LocalDateTime timeNow = ZonedDateTime.now(ZoneId.of("Europe/Moscow")).toLocalDateTime();
+        LocalDateTime timeNow = LocalDateTime.now();
 
         for (Item item : items) {
             Optional<Booking> lastBookingOptional =

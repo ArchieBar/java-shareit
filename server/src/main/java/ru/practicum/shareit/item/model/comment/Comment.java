@@ -25,7 +25,7 @@ public class Comment {
     public Comment(String authorName, CommentDto commentDto) {
         this.text = commentDto.getText();
         this.authorName = authorName;
-        this.created = ZonedDateTime.now(ZoneId.of("Europe/Moscow")).toLocalDateTime();
+        this.created = LocalDateTime.now();
         ;
     }
 }

@@ -42,7 +42,7 @@ public class ItemRequest {
     public ItemRequest(ItemRequestCreatedDto itemDto, User owner) {
         this.owner = owner;
         this.description = itemDto.getDescription();
-        this.created = ZonedDateTime.now(ZoneId.of("Europe/Moscow")).toLocalDateTime();
+        this.created = LocalDateTime.now();
         ;
         this.items = new ArrayList<>();
     }

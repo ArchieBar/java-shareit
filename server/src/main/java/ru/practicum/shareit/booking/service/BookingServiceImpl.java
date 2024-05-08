@@ -74,7 +74,6 @@ public class BookingServiceImpl implements BookingService {
 
         State enumState = null;
 
-        //LocalDateTime timeNow = ZonedDateTime.now(ZoneId.of("Europe/Moscow")).toLocalDateTime();
         LocalDateTime timeNow = LocalDateTime.now();
 
         try {
@@ -145,7 +144,7 @@ public class BookingServiceImpl implements BookingService {
 
         State enumState = null;
 
-        LocalDateTime timeNow = ZonedDateTime.now(ZoneId.of("Europe/Moscow")).toLocalDateTime();
+        LocalDateTime timeNow = LocalDateTime.now();
 
         try {
             enumState = State.valueOf(state);
