@@ -8,7 +8,6 @@ import ru.practicum.shareit.item.model.item.Item;
 import ru.practicum.shareit.user.model.User;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Data
@@ -21,22 +20,17 @@ public class Booking {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
     @ManyToOne(fetch = FetchType.EAGER)
     private User booker;
 
-    @NotNull
     @ManyToOne(fetch = FetchType.EAGER)
     private Item item;
 
-    @NotNull
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    @NotNull
     private LocalDateTime startTime;
 
-    @NotNull
     private LocalDateTime endTime;
 
     public Booking(User booker, Item item, LocalDateTime start, LocalDateTime end) {
