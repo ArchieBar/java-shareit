@@ -8,8 +8,6 @@ import ru.practicum.shareit.request.model.dto.ItemRequestCreatedDto;
 import ru.practicum.shareit.request.model.dto.ItemRequestWithItemsDto;
 import ru.practicum.shareit.request.service.ItemRequestService;
 
-import javax.validation.Valid;
-import javax.validation.constraints.Min;
 import java.util.List;
 
 @Slf4j
@@ -34,8 +32,8 @@ public class ItemRequestController {
     @ResponseStatus(HttpStatus.OK)
     public List<ItemRequestWithItemsDto> getAllRequests(
             @RequestHeader("X-Sharer-User-Id") Long ownerId,
-            @RequestParam(name = "from", defaultValue = "0") @Min(0) Integer from,
-            @RequestParam(name = "size", defaultValue = "10") @Min(0) Integer size) {
+            @RequestParam(name = "from", defaultValue = "0") Integer from,
+            @RequestParam(name = "size", defaultValue = "10") Integer size) {
         log.info("Вызов GET-операции getAllRequests");
         return itemRequestService.getAllRequests(ownerId, from, size);
     }
@@ -50,7 +48,7 @@ public class ItemRequestController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ItemRequestWithItemsDto createRequest(@RequestBody @Valid ItemRequestCreatedDto requestDto,
+    public ItemRequestWithItemsDto createRequest(@RequestBody ItemRequestCreatedDto requestDto,
                                                  @RequestHeader("X-Sharer-User-Id") Long ownerId) {
         log.info("Вызов POST-метода createRequest");
         return itemRequestService.createRequest(requestDto, ownerId);

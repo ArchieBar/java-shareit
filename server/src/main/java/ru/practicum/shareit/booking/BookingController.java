@@ -8,7 +8,6 @@ import ru.practicum.shareit.booking.model.dto.BookingDto;
 import ru.practicum.shareit.booking.model.dto.BookingResponseDto;
 import ru.practicum.shareit.booking.service.BookingService;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @Slf4j
@@ -55,7 +54,7 @@ public class BookingController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public BookingResponseDto createBooking(@RequestHeader("X-Sharer-User-Id") Long userId,
-                                            @RequestBody @Valid BookingDto bookingDto) {
+                                            @RequestBody BookingDto bookingDto) {
         log.info("Вызов POST-операции /bookings");
         return bookingService.createBooking(userId, bookingDto);
     }

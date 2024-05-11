@@ -11,7 +11,6 @@ import ru.practicum.shareit.item.model.item.dto.ItemDto;
 import ru.practicum.shareit.item.model.item.dto.ItemWithBookingDto;
 import ru.practicum.shareit.item.service.ItemService;
 
-import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,7 +57,7 @@ public class ItemController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ItemDto createItem(@Valid @RequestBody ItemDto itemDto,
+    public ItemDto createItem(@RequestBody ItemDto itemDto,
                               @RequestHeader("X-Sharer-User-Id") Long idOwner) {
         log.info("Вызов POST-операции \"createItem\"");
         return itemService.createItem(itemDto, idOwner);
@@ -66,7 +65,7 @@ public class ItemController {
 
     @PostMapping("/{itemId}/comment")
     @ResponseStatus(HttpStatus.OK)
-    public Comment createComment(@RequestBody @Valid CommentDto commentDto,
+    public Comment createComment(@RequestBody CommentDto commentDto,
                                  @PathVariable("itemId") Long itemId,
                                  @RequestHeader("X-Sharer-User-Id") Long userId) {
         log.info("Вызов POST-операции \"createComment\"");
